@@ -1,0 +1,256 @@
+FORMAT: 1A
+HOST: https://polls.apiblueprint.org/
+
+# Keptang
+เว็บนี้เป็นเว็บเกี่ยวกับบันทึกรายรับ-รายจ่าย และดูยอดเงินที่เราจดบันทึก
+## Profile [/profile]
+### Profile [GET]
++ Request (application/json)
+
+    + Headers
+        
+            accountid: "40956"
+
+
++ Response 200 (application/json)
+
+    + Headers
+    
+            Locate: /profile/40956
+            
+    + Body 
+         
+            {
+                "accountid": 40956,
+                "username": "Most",
+                "totalbalance": 115000
+            }
+
+## ยอดเงินคงเหลือทั้งหมด [/money]
+### get All money [GET]
++ Request (application/json)
+
+    + Headers
+        
+            accountid: "40956"
+     
++ Response 200 (application/json)
+
+    + Headers
+    
+            Location: /money/40956
+            
+    + Body
+
+            {
+                
+                "balancetotal": 115000,
+                "moneyinouthistory": [
+                       
+                        {
+                                "list_id": 5,
+                                "description": "เลี้ยงข้าวสาว",
+                                "type": "expense",
+                                "amount": 100 ,
+                                "date":"2023-03-15"
+                        },
+                        {
+                                "list_id": 4,
+                                "description": "ซื้อข้าวเช้า",
+                                "type": "expense",
+                                "amount": 100 ,
+                                "date":"2023-03-15"
+                        },
+                        {
+                                "list_id": 3,
+                                "description": "แม่ให้",
+                                "type": "income",
+                                "amount": 300 ,
+                                "date":"2023-03-15"
+                        },
+                        {
+                                "list_id": 2,
+                                "description": "สาวเลี้ยง",
+                                "type": "income",
+                                "amount": 5000 ,
+                                "date": "2023-03-14"
+                        },
+                        {
+                                "list_id": 1,
+                                "description": "นิวจีนบั้มใหม่",
+                                "type": "expense",
+                                "amount": 5000 ,
+                                "date":"2023-03-13"
+                        }
+                ]
+                
+            }
+
++ Response 404
+    + Headers
+        
+                Location: /money/40956
+                
+    + Body
+    
+                {
+                    "error": "Not Found"
+                }
+    
+## รายรับราย-จ่าย รายวัน  [/money/today]
+### get daily transactions [GET]
++ Request (application/json)
+
+    + Headers
+        
+            accountid: "40956"
+     
++ Response 200 (application/json)
+    + Headers
+    
+            Location: /money/today/40956
+            
+    + Body
+    
+            {
+                
+                "balancetoday": 100,
+                "balancetotal": 115000,
+                "date":"2023-03-15",
+                "moneyinouthistorytoday": [
+
+                        {
+                                "list_id": 5,
+                                "description": "เลี้ยงข้าวสาว",
+                                "type": "expense",
+                                "amount": 100 
+                                
+                        },
+                        {
+                                "list_id": 4,
+                                "description": "ซื้อข้าวเช้า",
+                                "type": "expense",
+                                "amount": 100 
+                                
+                        },
+                        {
+                                "list_id": 3,
+                                "description": "แม่ให้",
+                                "type": "income",
+                                "amount": 300 
+                                
+                        }
+                ]
+            }
+    
+    
+
+
+    
+
+## เพิ่ม รายรับ-รายจ่าย [/money/saving]
+### post add[POST]
++ Request (application/json)
+
+        {
+          "user_data": {
+            "id": 40957
+          },
+          "dataitem": {
+            "list_id": 15,
+            "description": "รายรับทดสอบ",
+            "date": "2023-03-15",
+            "amount": 1000,
+            "types": "income"
+          }
+        }
+
++ Response 201 (application/json)
+    
+    + Headers
+        
+            Location: /money/saving/40956
+                
+    + Body
+        
+            {
+                "items": {
+                    "amount": 1000,
+                    "date": "2023-03-15",
+                    "description": "รายรับทดสอบ",
+                    "list_id": 6,
+                    "types": "income
+                },
+                "text": "ทำการเพิ่มข้อมูลละเด้อ",
+                "u_name": "vivat"
+            }
+    
+    
+    
+## แก้ไข รายรับ-รายจ่าย [/money/item/2]
+### put edit[PUT]
++ Request (application/json)
+
+        {
+          "user_data": {
+            "id": 40956
+          },
+          "dataitem": {
+            "description": "รายรับทดสอบ",
+            "date": "2023-03-15",
+            "amount": 1000,
+            "types": "expenses"
+          }
+        }
+
++ Response 200 (application/json)
+    
+    + Headers
+        
+            Location: /money/item/40956
+                
+    + Body
+        
+            {
+                "items_new": {
+                    "amount": 1000,
+                    "date": "2023-03-15",
+                    "description": "รายรับทดสอบ",
+                    "list_id": 3,
+                    "types": "expenses"
+                },
+                "items_old": {
+                    "amount": 100,
+                    "date": "2023-03-15",
+                    "description": "แม่ให้",
+                    "list_id": 3,
+                    "types": "income"
+                },
+                "text": "ทำการแก้ไขข้อมูลละเด้อ"
+            }
+
+## ลบ รายรับ-รายจ่าย [/money/item/8]
+### Delete item [DELETE]
+
++ Request (application/json)
+
+    + Headers
+        
+            accountid: "40956"
+            
+
++ Response 200 (application/json)
+
+        {
+            "items": {
+                "amount": 100,
+                "date": "2023-03-15",
+                "description": "แม่ให้",
+                "list_id": 3,
+                "types": "income"
+            },
+            "text": "ทำการลบข้อมูลละเด้อ"
+        }
+        
+
+
